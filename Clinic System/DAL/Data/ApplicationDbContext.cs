@@ -19,8 +19,15 @@ namespace Clinic_System.DAL.Data
         public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Gender> Genders { get; set; }
+        public DbSet<Speciality> Specialities { get; set; }
+        public DbSet<Doctor> Doctors { get; set; }
+        public DbSet<Clinic> Clinics { get; set; }
+        public DbSet<ClinicManagers> ClinicManagers { get; set; }
+        public DbSet<CheckClinic> CheckClinics { get; set; }
+        public DbSet<Gain> Gains { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+
             base.OnModelCreating(builder);
         }
 

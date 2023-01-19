@@ -84,6 +84,9 @@ namespace Clinic_System
             services.AddAutoMapper(opt => opt.AddProfile(new DomainProfile()));
 
             services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<IDoctorService, DoctorService>();
+            services.AddScoped<IAdmiService, AdmiService>();
+            services.AddScoped< ApplicationDbContext>();
 
 
 

@@ -24,6 +24,7 @@ namespace Clinic_System.BL.Repository
             this._usermng = usermng;
             this._jwt = jwt.Value;
         }
+        #region create token 
         private async Task<JwtSecurityToken> CreateJwtToken(AppUser user)
         {
             var userClaims = await _usermng.GetClaimsAsync(user);
@@ -56,6 +57,8 @@ namespace Clinic_System.BL.Repository
             return jwtSecurityToken;
         }
 
+        #endregion
+        #region register
         public async Task<AuthenticationModel> RegisterAsync(RegisterDTO model)
         {
             if (await _usermng.FindByEmailAsync(model.Email) is not null)
@@ -97,16 +100,23 @@ namespace Clinic_System.BL.Repository
             };
         }
 
+        #endregion
+        #region login
         public async Task<AuthenticationModel> LoginAsync(LoginDTO model)
         {
             var AuthModel = new AuthenticationModel();
             var user = await _usermng.FindByEmailAsync(model.EmailOrUserName);
-            if(user == null)
+            if (user == null)
                 user = await _usermng.FindByNameAsync(model.EmailOrUserName);
 
-            if (user is null || !await _usermng.CheckPasswordAsync(user, model.Password))
+            if (user is null)
             {
-                AuthModel.Message = "email or password is in correct ";
+                AuthModel.Message = "incorrect email";
+                return AuthModel;
+            }
+            if (!await _usermng.CheckPasswordAsync(user, model.Password))
+            {
+                AuthModel.Message = "incorrect password ";
                 return AuthModel;
             }
             var JwtSecurityToken = await CreateJwtToken(user);
@@ -125,5 +135,27 @@ namespace Clinic_System.BL.Repository
 
             return AuthModel;
         }
+
+        #endregion
+        #region get current user 
+        public Response <AppUser> getuserinfo( string UserName)
+        {
+            try
+            {
+                 var user =  _usermng.FindByNameAsync(UserName).Result;
+                if (user is null)
+                    return new Response<AppUser> { message = "no user found" };
+                return new Response<AppUser> { Data = user };
+            }
+            catch
+            {
+                return new Response<AppUser> { message = "no error ocures" };
+
+            }
+
+        }
+        #endregion
+
+
     }
 }
